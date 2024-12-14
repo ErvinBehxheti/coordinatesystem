@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas width="500" height="500" id="canvas"></canvas>
+    <script>
+      class CartesianGrid {
+        constructor(canvasId, scale = 40, tickSize = 3) {
+          this.canvas = document.getElementById(canvasId);
+          this.ctx = this.canvas.getContext("2d");
+          this.origin = {
+            x: Math.round(this.canvas.clientWidth / 2),
+            y: Math.round(this.canvas.clientHeight / 2),
+          };
+          this.scale = scale;
+          this.tickSize = tickSize;
+
+          this.canvas.addEventListener("click", () => {});
+
+          this.ctx.translate(this.origin.x, this.origin.y);
+          this.drawGrid();
+        }
+
+        drawGrid() {
+          const { ctx, scale, tickSize } = this;
+
+          for (let x = 0; x < this.origin.x; x += scale) {
+            ctx.beginPath();
+            ctx.moveTo(x, -this.origin.y);
+            ctx.lineTo(x, this.origin.y);
+            ctx.closePath();
+            ctx.strokeStyle = "#ddd";
+            ctx.stroke();
+          }
+
+          for (let y = 0; y < this.origin.y; y += scale) {
+            ctx.beginPath();
+            ctx.moveTo(-this.origin.x, y);
+            ctx.lineTo(this.origin.x, y);
+            ctx.closePath();
+            ctx.strokeStyle = "#ddd";
+            ctx.stroke();
+          }
+
+          for (let x = 0; x > -this.origin.x; x -= scale) {
+            ctx.beginPath();
+            ctx.moveTo(x, -this.origin.y);
+            ctx.lineTo(x, this.origin.y);
+            ctx.closePath();
+            ctx.strokeStyle = "#ddd";
+            ctx.stroke();
+          }
+
+          for (let y = 0; y > -this.origin.y; y -= scale) {
+            ctx.beginPath();
+            ctx.moveTo(-this.origin.x, y);
+            ctx.lineTo(this.origin.x, y);
+            ctx.closePath();
+            ctx.strokeStyle = "#ddd";
+            ctx.stroke();
+          }
+
+          ctx.beginPath();
+          ctx.moveTo(0, -this.origin.y);
+          ctx.lineTo(0, this.origin.y);
+          ctx.closePath();
+          ctx.strokeStyle = "#000";
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(-this.origin.x, 0);
+          ctx.lineTo(this.origin.x, 0);
+          ctx.closePath();
+          ctx.strokeStyle = "#000";
+          ctx.stroke();
+
+          for (let x = 0; x < this.origin.x; x += scale) {
+            ctx.beginPath();
+            ctx.moveTo(x, tickSize);
+            ctx.lineTo(x, -tickSize);
+            ctx.closePath();
+            ctx.stroke();
+          }
+
+          for (let y = 0; y < this.origin.y; y += scale) {
+            ctx.beginPath();
+            ctx.moveTo(tickSize, y);
+            ctx.lineTo(-tickSize, y);
+            ctx.closePath();
+            ctx.stroke();
+          }
+
+          for (let x = 0; x > -this.origin.x; x -= scale) {
+            ctx.beginPath();
+            ctx.moveTo(x, tickSize);
+            ctx.lineTo(x, -tickSize);
+            ctx.closePath();
+            ctx.stroke();
+          }
+
+          for (let y = 0; y > -this.origin.y; y -= scale) {
+            ctx.beginPath();
+            ctx.moveTo(tickSize, y);
+            ctx.lineTo(-tickSize, y);
+            ctx.closePath();
+            ctx.stroke();
+          }
+
+          ctx.textAlign = "center";
+          ctx.textBaseline = "top";
+
+          const startX = Math.floor(-this.origin.x / scale) * scale;
+          const endX = Math.ceil(this.origin.x / scale) * scale;
+
+          for (let x = startX; x <= endX; x += scale) {
+            if (x !== 0) {
+              const label = (x / scale).toString();
+              ctx.fillText(label, x, tickSize + 10);
+            }
+          }
+
+          ctx.textAlign = "right";
+          ctx.textBaseline = "middle";
+
+          const startY = Math.floor(-this.origin.y / scale) * scale;
+          const endY = Math.ceil(this.origin.y / scale) * scale;
+
+          for (let y = startY; y <= endY; y += scale) {
+            if (y !== 0) {
+              const label = (-y / scale).toString();
+              ctx.fillText(label, -tickSize - 10, y);
+            }
+          }
+        }
+      }
+
+      new CartesianGrid("canvas");
+    </script>
+  </body>
+</html>
